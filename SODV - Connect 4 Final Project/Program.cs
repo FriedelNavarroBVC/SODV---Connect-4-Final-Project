@@ -120,6 +120,96 @@ namespace SODV___Connect_4_Final_Project
             }
         }
 
+        private void TwoPlayerMode()
+        {
+            board.Initialize(); // Initialize the game board
+            currentPlayer = player1; // Set the current player to player 1
+            isGameFinished = false; // Reset the game finished flag
 
+            while (!isGameFinished) // Continue the game until it is finished
+            {
+                Console.Clear(); // Clear the console
+                board.Draw(); // Draw the game board
+
+                Console.WriteLine($"{currentPlayer.Name}'s turn ({currentPlayer.Symbol})");
+                int move = currentPlayer.GetMove(board); // Get the current player's move
+
+                if (board.MakeMove(move, currentPlayer.Symbol)) // Make the move and check if it was successful
+                {
+                    if (board.IsWinningMove(move, currentPlayer.Symbol)) // Check if the move resulted in a win
+                    {
+                        Console.Clear();
+                        board.Draw();
+                        Console.WriteLine($"{currentPlayer.Name} wins!");
+                        isGameFinished = true;
+                    }
+                    else if (board.IsBoardFull()) // Check if the board is full (draw)
+                    {
+                        Console.Clear();
+                        board.Draw();
+                        Console.WriteLine("It's a draw!");
+                        isGameFinished = true;
+                    }
+                    else
+                    {
+                        currentPlayer = (currentPlayer == player1) ? player2 : player1; // Switch to the next player
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid move. Please try again.");
+                }
+            }
+
+            Start(); // Restart the game
+        }
+
+        private void SinglePlayerMode()
+        {
+            board.Initialize(); // Initialize the game board
+            player1 = new HumanPlayer('X', "Player 1"); // Set player 1 as a human player
+            player2 = new ComputerPlayer('O', "AI"); // Set player 2 as a computer player
+            currentPlayer = player1; // Set the current player to player 1
+            isGameFinished = false; // Reset the game finished flag
+
+            while (!isGameFinished) // Continue the game until it is finished
+            {
+                Console.Clear(); // Clear the console
+                board.Draw(); // Draw the game board
+
+                Console.WriteLine($"{currentPlayer.Name}'s turn ({currentPlayer.Symbol})");
+                int move = currentPlayer.GetMove(board); // Get the current player's move
+
+                if (board.MakeMove(move, currentPlayer.Symbol)) // Make the move and check if it was successful
+                {
+                    if (board.IsWinningMove(move, currentPlayer.Symbol)) // Check if the move resulted in a win
+                    {
+                        Console.Clear();
+                        board.Draw();
+                        Console.WriteLine($"{currentPlayer.Name} wins!");
+                        isGameFinished = true;
+                    }
+                    else if (board.IsBoardFull()) // Check if the board is full (draw)
+                    {
+                        Console.Clear();
+                        board.Draw();
+                        Console.WriteLine("It's a draw!");
+                        isGameFinished = true;
+                    }
+                    else
+                    {
+                        currentPlayer = (currentPlayer == player1) ? player2 : player1; // Switch to the next player
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid move. Please try again.");
+                }
+            }
+
+            Start(); // Restart the game
+        }
 
     }
+
+}
