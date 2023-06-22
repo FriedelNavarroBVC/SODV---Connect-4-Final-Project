@@ -212,4 +212,167 @@ namespace SODV___Connect_4_Final_Project
 
     }
 
+    class Board
+    {
+        private char[,] grid; // Represents the game grid
+        private const int Rows = 6; // Number of rows in the grid
+        private const int Columns = 7; // Number of columns in the grid
+
+        public Board()
+        {
+            grid = new char[Rows, Columns];
+        }
+
+        public void Initialize()
+        {
+            for (int row = 0; row < Rows; row++)
+            {
+                for (int col = 0; col < Columns; col++)
+                {
+                    grid[row, col] = ' ';
+                }
+            }
+        }
+
+        public void Draw()
+        {
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine("   *** CONNECT FOUR GAME ***");
+            Console.WriteLine("-------------------------------");
+            for (int row = Rows - 1; row >= 0; row--)
+            {
+                Console.Write(" | ");
+                for (int col = 0; col < Columns; col++)
+                {
+                    Console.Write($"{grid[row, col]} | ");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine("   1   2   3   4   5   6   7");
+            Console.WriteLine("-------------------------------\n");
+
+        }
+
+        public bool IsColumnValid(int column)
+        {
+            return column >= 1 && column <= Columns && grid[Rows - 1, column - 1] == ' ';
+        }
+
+        public bool MakeMove(int column, char symbol)
+        {
+            if (!IsColumnValid(column))
+            {
+                return false;
+            }
+
+            for (int row = 0; row < Rows; row++)
+            {
+                if (grid[row, column - 1] == ' ')
+                {
+                    grid[row, column - 1] = symbol;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool IsWinningMove(int column, char symbol)
+        {
+            int row = 0;
+
+            while (row < Rows && grid[row, column - 1] != symbol)
+            {
+                row++;
+            }
+
+            if (row >= Rows)
+            {
+                return false;
+            }
+
+            // Check for vertical win
+            if (row <= Rows - 4 && grid[row + 1, column - 1] == symbol && grid[row + 2, column - 1] == symbol && grid[row + 3, column - 1] == symbol)
+            {
+                return true;
+            }
+
+            // Check for horizontal win
+            int count = 1;
+            int left = column - 2;
+            int right = column;
+
+            while (left >= 0 && grid[row, left] == symbol)
+            {
+                count++;
+                left--;
+            }
+
+            while (right < Columns && grid[row, right] == symbol)
+            {
+                count++;
+                right++;
+            }
+
+            if (count >= 4)
+            {
+                return true;
+            }
+
+            // Check for diagonal win (top-left to bottom-right)
+            count = 1;
+            int diagLeft = column - 2;
+            int diagRight = column;
+
+            while (row + count < Rows && diagLeft >= 0 && grid[row + count, diagLeft] == symbol)
+            {
+                count++;
+                diagLeft--;
+            }
+
+            while (row - count >= 0 && diagRight < Columns && grid[row - count, diagRight] == symbol)
+            {
+                count++;
+                diagRight++;
+            }
+
+            if (count >= 4)
+            {
+                return true;
+            }
+
+            // Check for diagonal win (top-right to bottom-left)
+            count = 1;
+            diagLeft = column - 2;
+            diagRight = column;
+
+            while (row - count >= 0 && diagLeft >= 0 && grid[row - count, diagLeft] == symbol)
+            {
+                count++;
+                diagLeft--;
+            }
+
+            while (row + count < Rows && diagRight < Columns && grid[row + count, diagRight] == symbol)
+            {
+                count++;
+                diagRight++;
+            }
+
+            return count >= 4;
+        }
+
+        public bool IsBoardFull()
+        {
+            for (int col = 0; col < Columns; col++)
+            {
+                if (grid[Rows - 1, col] == ' ')
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
 }
